@@ -9,5 +9,6 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+	# If your JAR has a different name, use COPY --from=build /app/target/nexusproject-*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
