@@ -1,14 +1,13 @@
-# Use OpenJDK 17 as base image
-FROM openjdk:17-jdk-alpine
 
-# Set working directory
+# Build stage
+FROM maven:3.8.7-openjdk-17 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy built jar file
-COPY target/*.jar app.jar
-
-# Expose port 8080
+# Run stage
+FROM openjdk:17-jdk-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the jar file
 ENTRYPOINT ["java", "-jar", "app.jar"]
